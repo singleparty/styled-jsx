@@ -3,7 +3,7 @@ import * as t from '@babel/types'
 import _hashString from 'string-hash'
 import { SourceMapGenerator } from 'source-map'
 import convert from 'convert-source-map'
-import transform from './lib/style-transform'
+import transformV2 from './lib/style-transform-v2'
 
 import {
   STYLE_ATTRIBUTE,
@@ -109,6 +109,21 @@ export const addClassName = (path, jsxId) => {
   )
 }
 
+export const addAttribute = (path, attributes) => {
+  path.node.attributes.push(
+    t.JSXSpreadAttribute(
+      t.objectExpression(
+        attributes.map(attr => t.objectProperty(
+          attr,
+          t.stringLiteral(''),
+          true,
+          false,
+          null
+        ))
+      )
+    )
+  )
+}
 export const getScope = path =>
   (
     path.findParent(
@@ -310,6 +325,67 @@ export const getJSXStyleInfo = (expr, scope) => {
     dynamic,
     location
   }
+}
+export const computeAttributes = (styles, externalJsxIdArr) => {
+  let attributes = []
+  if (styles.length === 0) {
+    attributes = [...externalJsxIdArr]
+    return { attributes }
+  }
+
+  const hashes = styles.reduce(
+    (acc, styles) => {
+      if (styles.dynamic === false) {
+        acc.static.push(styles.hash)
+      } else {
+        acc.dynamic.push(styles)
+      }
+
+      return acc
+    },
+    {
+      static: [],
+      dynamic: []
+    }
+  )
+
+  const staticClassName = `jsx-${hashString(hashes.static.join(','))}`
+
+  // Static and optionally external classes. E.g.
+  // '[jsx-externalClasses] jsx-staticClasses'
+  if (hashes.dynamic.length === 0) {
+    attributes = [...externalJsxIdArr, staticClassName]
+    return { attributes }
+  }
+
+  // _JSXStyle.dynamic([ ['1234', [props.foo, bar, fn(props)]], ... ])
+  const dynamic = t.callExpression(
+    // Callee: _JSXStyle.dynamic
+    t.memberExpression(t.identifier(STYLE_COMPONENT), t.identifier('dynamic')),
+    // Arguments
+    [
+      t.arrayExpression(
+        hashes.dynamic.map(styles =>
+          t.arrayExpression([
+            t.stringLiteral(hashString(styles.hash + staticClassName)),
+            t.arrayExpression(styles.expressions)
+          ])
+        )
+      )
+    ]
+  )
+
+  // Dynamic and optionally external classes. E.g.
+  // '[jsx-externalClasses] ' + _JSXStyle.dynamic([ ['1234', [props.foo, bar, fn(props)]], ... ])
+  if (hashes.static.length === 0) {
+    attributes = [...externalJsxIdArr, dynamic]
+    return { attributes }
+  }
+
+  // Static, dynamic and optionally external classes. E.g.
+  // '[jsx-externalClasses] jsx-staticClasses ' + _JSXStyle.dynamic([ ['5678', [props.foo, bar, fn(props)]], ... ])
+  attributes = [...externalJsxIdArr, staticClassName, dynamic]
+  return { attributes }
 }
 
 export const computeClassNames = (styles, externalJsxId) => {
@@ -561,6 +637,8 @@ export const combinePlugins = plugins => {
 const getPrefix = (isDynamic, id) =>
   isDynamic ? '.__jsx-style-dynamic-selector' : `.${id}`
 
+const getPrefixV2 = (isDynamic, id) => isDynamic ? '__jsx-style-dynamic-selector' : `${id}`
+
 export const processCss = (stylesInfo, options) => {
   const {
     hash,
@@ -616,8 +694,8 @@ export const processCss = (stylesInfo, options) => {
     const filename = fileInfo.sourceFileName
 
     transformedCss = addSourceMaps(
-      transform(
-        isGlobal ? '' : getPrefix(dynamic, staticClassName),
+      transformV2(
+        isGlobal ? '' : getPrefixV2(dynamic, staticClassName),
         plugins(css, pluginsOptions),
         {
           generator,
@@ -631,8 +709,8 @@ export const processCss = (stylesInfo, options) => {
       filename
     )
   } else {
-    transformedCss = transform(
-      isGlobal ? '' : getPrefix(dynamic, staticClassName),
+    transformedCss = transformV2(
+      isGlobal ? '' : getPrefixV2(dynamic, staticClassName),
       plugins(css, pluginsOptions),
       { splitRules, vendorPrefixes }
     )

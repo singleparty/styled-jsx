@@ -1,8 +1,8 @@
 {
-  "name": "styled-jsx",
+  "name": "styled-jsx-remake",
   "version": "3.2.5",
   "license": "MIT",
-  "repository": "zeit/styled-jsx",
+  "repository": "singleparty/styled-jsx-remake",
   "description": "Full CSS support for JSX without compromises",
   "files": [
     "dist",
@@ -58,6 +58,7 @@
   },
   "dependencies": {
     "@babel/types": "7.8.3",
+    "@vue/component-compiler-utils": "3.1.2",
     "babel-plugin-syntax-jsx": "6.18.0",
     "convert-source-map": "1.7.0",
     "loader-utils": "1.2.3",
