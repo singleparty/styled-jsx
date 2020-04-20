@@ -1,4 +1,50 @@
-# styled-jsx
+# styled-jsx-remake
+
+#### `styled-jsx-remake` fork自 `styled-jsx` ，用于修复某些bug，修改点如下:
+
+- `scopeid` 插入到属性而不是 `className`
+  ```javascript
+  <div class="orange" jsx-302262132 jsx-175175684></div>
+  ```
+
+- 修改底层css编译库 `stylis` 为 `@vue/component-compiler-utils`，修复bug [-webkit-keyframes add unexpect scope id](https://github.com/thysultan/stylis.js/issues/200)
+
+#### 已有项目如何接入
+
+> 目的是在不影响现有流程的情况下无缝接入
+
+一个常见的loader配置顺序是这样的
+
+```javascript
+{
+  test: /\.s(a|c)ss$/,
+  use: [
+    { loader: 'style-loader },
+    { loader: 'css-loader },
+    { loader: 'postcss-loader },
+    { loader: 'sass-loader }
+  ]
+}
+```
+
+而接入 `styled-jsx-remake` 所需配置如下
+
+```javascript
+{
+  test: /\.s(a|c)ss$/,
+  use: [
+    { loader: 'babel-loader' }
+    { loader: require('styled-jsx/webpack').loader }
+    { loader: 'css-loader },
+    { loader: 'postcss-loader },
+    { loader: 'sass-loader }
+  ]
+}
+```
+
+### 以下是原`readme`
+
+---
 
 [![Build Status](https://travis-ci.org/zeit/styled-jsx.svg?branch=master)](https://travis-ci.org/zeit/styled-jsx)
 
