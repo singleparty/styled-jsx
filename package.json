@@ -1,8 +1,8 @@
 {
-  "name": "styled-jsx-remake",
+  "name": "styled-jsx",
   "version": "3.2.5",
   "license": "MIT",
-  "repository": "singleparty/styled-jsx-remake",
+  "repository": "singleparty/styled-jsx",
   "description": "Full CSS support for JSX without compromises",
   "files": [
     "dist",
