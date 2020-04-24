@@ -346,11 +346,12 @@ export const computeAttributes = (styles, externalJsxIdArr) => {
   )
 
   const staticClassName = `jsx-${hashString(hashes.static.join(','))}`
+  const staticClassNameStringLiteral = t.stringLiteral(staticClassName)
 
   // Static and optionally external classes. E.g.
   // '[jsx-externalClasses] jsx-staticClasses'
   if (hashes.dynamic.length === 0) {
-    attributes = [...externalJsxIdArr, staticClassName]
+    attributes = [...externalJsxIdArr, staticClassNameStringLiteral]
     return { attributes }
   }
 
@@ -380,7 +381,7 @@ export const computeAttributes = (styles, externalJsxIdArr) => {
 
   // Static, dynamic and optionally external classes. E.g.
   // '[jsx-externalClasses] jsx-staticClasses ' + _JSXStyle.dynamic([ ['5678', [props.foo, bar, fn(props)]], ... ])
-  attributes = [...externalJsxIdArr, staticClassName, dynamic]
+  attributes = [...externalJsxIdArr, staticClassNameStringLiteral, dynamic]
   return { attributes }
 }
 
