@@ -111,15 +111,11 @@ export const addClassName = (path, jsxId) => {
 
 export const addAttribute = (path, attributes) => {
   path.node.attributes.push(
-    t.JSXSpreadAttribute(
+    t.jSXSpreadAttribute(
       t.objectExpression(
-        attributes.map(attr => t.objectProperty(
-          attr,
-          t.stringLiteral(''),
-          true,
-          false,
-          null
-        ))
+        attributes.map(attr =>
+          t.objectProperty(attr, t.stringLiteral(''), true, false, null)
+        )
       )
     )
   )
@@ -633,11 +629,12 @@ export const combinePlugins = plugins => {
 
   return combinedPluginsCache.combined
 }
-
+/* 
 const getPrefix = (isDynamic, id) =>
-  isDynamic ? '.__jsx-style-dynamic-selector' : `.${id}`
+  isDynamic ? '.__jsx-style-dynamic-selector' : `.${id}` */
 
-const getPrefixV2 = (isDynamic, id) => isDynamic ? '__jsx-style-dynamic-selector' : `${id}`
+const getPrefixV2 = (isDynamic, id) =>
+  isDynamic ? '__jsx-style-dynamic-selector' : `${id}`
 
 export const processCss = (stylesInfo, options) => {
   const {

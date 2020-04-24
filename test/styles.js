@@ -2,15 +2,15 @@
 import test from 'ava'
 
 // Ours
-import transform from '../src/lib/style-transform'
+import transform from '../src/lib/style-transform-v2'
 import read from './_read'
 
 test('transpile styles with attributes', async t => {
   const src = await read('./fixtures/transform.css')
-  t.snapshot(transform('.jsx-123', src))
+  t.snapshot(transform('jsx-123', src))
 })
 
-test('throws when using nesting', t => {
+test('嵌套不报错', t => {
   const fixtures = [
     `div { &:hover { color: red } }`,
     `div {
@@ -37,8 +37,8 @@ test('throws when using nesting', t => {
   ]
 
   fixtures.forEach(fixture => {
-    t.throws(() => transform('', fixture))
-    t.throws(() => transform('.jsx-123', fixture))
+    t.notThrows(() => transform('', fixture))
+    t.notThrows(() => transform('jsx-123', fixture))
   })
 })
 
@@ -77,11 +77,12 @@ test("doesn't throw when using at-rules", t => {
 
   fixtures.forEach(fixture => {
     t.notThrows(() => transform('', fixture))
-    t.notThrows(() => transform('.jsx-123', fixture))
+    t.notThrows(() => transform('jsx-123', fixture))
   })
 })
 
-test('splits rules for `optimizeForSpeed`', t => {
+// todo 不支持 optimizeForSpeed
+/* test('splits rules for `optimizeForSpeed`', t => {
   function assert(input, expected, prefix = '') {
     t.deepEqual(transform(prefix, input, { splitRules: true }), expected)
   }
@@ -251,4 +252,4 @@ test('splits rules for `optimizeForSpeed`', t => {
     ],
     '.jsx-123'
   )
-})
+}) */
