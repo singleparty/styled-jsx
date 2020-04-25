@@ -115,7 +115,7 @@ test('add - sanitizes dynamic CSS on the server', t => {
   registry.add({
     id: '123',
     children: [
-      'div.__jsx-style-dynamic-selector { color: red</style><script>alert("howdy")</script> }'
+      'div[__jsx-style-dynamic-selector] { color: red</style><script>alert("howdy")</script> }'
     ],
     dynamic: ['red</style><script>alert("howdy")</script>']
   })
@@ -123,7 +123,7 @@ test('add - sanitizes dynamic CSS on the server', t => {
   t.deepEqual(registry.cssRules(), [
     [
       'jsx-1871671996',
-      'div.jsx-1871671996 { color: red<\\/style><script>alert("howdy")</script> }'
+      'div[jsx-1871671996] { color: red<\\/style><script>alert("howdy")</script> }'
     ]
   ])
 })
@@ -278,9 +278,9 @@ test(
     t.is(
       computeSelector(
         'jsx-123',
-        '.test {} .__jsx-style-dynamic-selector { color: red } .__jsx-style-dynamic-selector { color: red }'
+        '.test {} [__jsx-style-dynamic-selector] { color: red } [__jsx-style-dynamic-selector] { color: red }'
       ),
-      '.test {} .jsx-123 { color: red } .jsx-123 { color: red }'
+      '.test {} [jsx-123] { color: red } [jsx-123] { color: red }'
     )
   })
 )
@@ -308,13 +308,13 @@ test(
       utilRegistry.getIdAndRules({
         id: '123',
         children:
-          '.test {} .__jsx-style-dynamic-selector { color: red } .__jsx-style-dynamic-selector { color: red }',
+          '.test {} [__jsx-style-dynamic-selector] { color: red } [__jsx-style-dynamic-selector] { color: red }',
         dynamic: ['test', 3, 'test']
       }),
       {
         styleId: 'jsx-1172888331',
         rules: [
-          '.test {} .jsx-1172888331 { color: red } .jsx-1172888331 { color: red }'
+          '.test {} [jsx-1172888331] { color: red } [jsx-1172888331] { color: red }'
         ]
       }
     )
@@ -325,8 +325,8 @@ test(
         id: '123',
         children: [
           '.test {}',
-          '.__jsx-style-dynamic-selector { color: red }',
-          '.__jsx-style-dynamic-selector { color: red }'
+          '[__jsx-style-dynamic-selector] { color: red }',
+          '[__jsx-style-dynamic-selector] { color: red }'
         ],
         dynamic: ['test', 3, 'test']
       }),
@@ -334,8 +334,8 @@ test(
         styleId: 'jsx-1172888331',
         rules: [
           '.test {}',
-          '.jsx-1172888331 { color: red }',
-          '.jsx-1172888331 { color: red }'
+          '[jsx-1172888331] { color: red }',
+          '[jsx-1172888331] { color: red }'
         ]
       }
     )
