@@ -12,8 +12,6 @@
 
 - 修复 `import style from 'xxx.module.scss` 语法无法兼容 `css-loader` 问题（这个不算 bug，只是找到一个解决方案 [`extract-loader`](https://github.com/peerigon/extract-loader)）
 
-- 不支持 `optimizeForSpeed` 配置
-
 - `css` 语法与vue保持一致(因为换了编译库)，如果用scss的话，简单使用如下：
   ```css
   .App::v-deep .orange {
