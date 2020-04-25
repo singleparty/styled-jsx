@@ -1,8 +1,8 @@
-# styled-jsx
+# @ciiri/styled-jsx
 
 ### fork 自 [`styled-jsx`](https://github.com/zeit/styled-jsx) ，目的在于修复某些 bug，`api` 可参考原来的库，其中改动点如下:
 
-- `scopeid` 插入到属性而不是 `class`
+- `scopeId` 插入到属性而不是 `class`
 
   ```javascript
   <div class="orange" jsx-302262132 jsx-175175684 />
@@ -49,7 +49,7 @@ _有两种方法，各取所需_
     test: /\.module\.(scss|sass)$/,
     use: [
       {loader: 'babel-loader'},
-      {loader: require('styled-jsx/webpack').loader},
+      {loader: require('@ciiri/styled-jsx/webpack').loader},
       {loader: 'extract-loader'},
       {loader: 'css-loader'},
       {loader: 'sass-loader'}
@@ -80,7 +80,7 @@ _有两种方法，各取所需_
     if (isModule) {
       removeList.push('style-loader/index.js');
     } else {
-      removeList.push('extract-loader/index.js', 'babel-loader/index.js', 'styled-jsx/dist/webpack.js');
+      removeList.push('extract-loader/index.js', 'babel-loader/index.js', '@ciiri/styled-jsx/dist/webpack.js');
     }
     this.loaders = loaders.filter(({ path }) => !removeList.some(str => path.includes(str)));
   }
@@ -95,7 +95,7 @@ _有两种方法，各取所需_
         }
       },
       { loader: 'babel-loader' },
-      { loader: require('styled-jsx/webpack').loader },
+      { loader: require('@ciiri/styled-jsx/webpack').loader },
       { loader: 'extract-loader' },
       { loader: 'style-loader' },
       { loader: 'css-loader' },
@@ -109,7 +109,7 @@ _有两种方法，各取所需_
 ```javascript
 "babel": {
   "plugins": [
-    "styled-jsx/babel"
+    "@ciiri/styled-jsx/babel"
   ]
 },
 ```
