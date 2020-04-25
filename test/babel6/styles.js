@@ -2,8 +2,8 @@
 import test from 'ava'
 
 // Ours
-import transform from '../src/lib/style-transform-v2'
-import read from './_read'
+import transform from '../../src/lib/style-transform-v2'
+import read from '../_read'
 
 test('transpile styles with attributes', async t => {
   const src = await read('./fixtures/transform.css')
@@ -152,9 +152,7 @@ test('splits rules for `optimizeForSpeed`', t => {
   )
 
   snapshot('@namespace url(http://www.w3.org/1999/xhtml);')
-
   snapshot('@namespace svg url(http://www.w3.org/2000/svg);')
-
   snapshot('@page :first { margin: 1in; }')
 
   snapshot(
