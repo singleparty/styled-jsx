@@ -81,86 +81,64 @@ test("doesn't throw when using at-rules", t => {
   })
 })
 
-// todo 不支持 optimizeForSpeed
-/* test('splits rules for `optimizeForSpeed`', t => {
-  function assert(input, expected, prefix = '') {
-    t.deepEqual(transform(prefix, input, { splitRules: true }), expected)
+test('没加分号报错', t => {
+  t.throws(() => transform('', '@import "./test.css"', { splitRules: true }))
+  t.throws(() => transform('', '@charset "UTF-8"', { splitRules: true }))
+})
+
+test('splits rules for `optimizeForSpeed`', t => {
+  function snapshop(input, prefix = '') {
+    t.snapshot(transform(prefix, input, { splitRules: true }))
   }
 
-  assert('div { color: red }', ['div{color:red;}'])
+  snapshop('div { color: red }')
 
-  assert('div { color: red } .p { color: red }', [
-    'div{color:red;}',
-    '.p{color:red;}'
-  ])
+  snapshop('div { color: red } .p { color: red }')
 
-  assert('div, span { color: red } a > .p { color: red }', [
-    'div,span{color:red;}',
-    'a>.p{color:red;}'
-  ])
+  snapshop('div, span { color: red } a > .p { color: red }')
 
-  assert(
-    '@media (min-width: 400px) { div, span { color: red } } a > .p { color: red }',
-    ['@media (min-width:400px){div,span{color:red;}}', 'a>.p{color:red;}']
+  snapshop(
+    '@media (min-width: 400px) { div, span { color: red } } a > .p { color: red }'
   )
 
-  assert(
-    '@media (min-width: 400px) { div { color: red } span { color: red } } a > .p { color: red }',
-    [
-      '@media (min-width:400px){div{color:red;}span{color:red;}}',
-      'a>.p{color:red;}'
-    ]
+  snapshop(
+    '@media (min-width: 400px) { div { color: red } span { color: red } } a > .p { color: red }'
   )
 
-  assert(
+  snapshop(
     `@media (min-width: 1px) and (max-width: 768px) {
       [class*='test__test--'] {
         color: red;
       }
-    }`,
-    [
-      `@media (min-width:1px) and (max-width:768px){[class*='test__test--']{color:red;}}`
-    ]
+    }`
   )
 
-  assert(
-    'span { color: red } @font-face { font-family: test; src: url(test.woff); } div { color: red }',
-    [
-      '@font-face{font-family:test;src:url(test.woff);}',
-      'span{color:red;}',
-      'div{color:red;}'
-    ]
+  snapshop(
+    'span { color: red } @font-face { font-family: test; src: url(test.woff); } div { color: red }'
   )
 
-  assert('@charset "UTF-8"', ['@charset "UTF-8";'])
+  snapshop('@charset "UTF-8";')
 
-  assert('@import "./test.css"', ['@import "./test.css";'])
+  snapshop('@import "./test.css";')
 
-  assert(
+  snapshop(
     `
     @keyframes test {
       0% { opacity: 0 }
       100% { opacity: 1 }
     }
-  `,
-    [
-      '@-webkit-keyframes test{0%{opacity:0;}100%{opacity:1;}}',
-      '@keyframes test{0%{opacity:0;}100%{opacity:1;}}'
-    ]
+  `
   )
 
-  assert(
+  snapshop(
     `
     @supports (display: flex) {
       div { display: flex; }
     }
-  `,
-    [
-      '@supports (display:-webkit-box) or (display:-webkit-flex) or (display:-ms-flexbox) or (display:flex){div{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;}}'
-    ]
+  `
   )
 
-  assert(
+  snapshop(
     `
     @import "./test.css";
     @supports (display: flex) {
@@ -170,26 +148,16 @@ test("doesn't throw when using at-rules", t => {
     a, div { color: red }
     @import "./test.css";
     @media (min-width: 400px) { div, span { color: red } }
-  `,
-    [
-      '@import "./test.css";',
-      '@import "./test.css";',
-      '@supports (display:-webkit-box) or (display:-webkit-flex) or (display:-ms-flexbox) or (display:flex){div{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;}}',
-      'div{color:red;}',
-      'a,div{color:red;}',
-      '@media (min-width:400px){div,span{color:red;}}'
-    ]
+  `
   )
 
-  assert('@namespace url(http://www.w3.org/1999/xhtml)', [
-    '@namespace url(http://www.w3.org/1999/xhtml);'
-  ])
-  assert('@namespace svg url(http://www.w3.org/2000/svg)', [
-    '@namespace svg url(http://www.w3.org/2000/svg);'
-  ])
-  assert('@page :first { margin: 1in; }', ['@page :first{margin:1in;}'])
+  snapshop('@namespace url(http://www.w3.org/1999/xhtml);')
 
-  assert(
+  snapshop('@namespace svg url(http://www.w3.org/2000/svg);')
+
+  snapshop('@page :first { margin: 1in; }')
+
+  snapshop(
     `
     div {
       animation: fade-in ease-in 1;
@@ -207,15 +175,10 @@ test("doesn't throw when using at-rules", t => {
       }
     }
   `,
-    [
-      'div.jsx-123{-webkit-animation:fade-in-jsx-123 ease-in 1;animation:fade-in-jsx-123 ease-in 1;-webkit-animation-fill-mode:forwards;animation-fill-mode:forwards;-webkit-animation-duration:500ms;animation-duration:500ms;opacity:0;}',
-      '@-webkit-keyframes fade-in-jsx-123{from{opacity:0;}to{opacity:1;}}',
-      '@keyframes fade-in-jsx-123{from{opacity:0;}to{opacity:1;}}'
-    ],
-    '.jsx-123'
+    'jsx-123'
   )
 
-  assert(
+  snapshop(
     `
     div {
       animation: fade-in ease-in 1;
@@ -233,23 +196,8 @@ test("doesn't throw when using at-rules", t => {
         opacity: 1;
       }
     }
-  `,
-    [
-      'div{-webkit-animation:fade-in ease-in 1;animation:fade-in ease-in 1;-webkit-animation-fill-mode:forwards;animation-fill-mode:forwards;-webkit-animation-duration:500ms;animation-duration:500ms;opacity:0;}',
-      '@-webkit-keyframes fade-in{from{opacity:0;}to{opacity:1;}}',
-      '@keyframes fade-in{from{opacity:0;}to{opacity:1;}}'
-    ]
+  `
   )
 
-  assert(
-    `div { color: red } ::placeholder { color: green }`,
-    [
-      'div.jsx-123{color:red;}',
-      '.jsx-123::-webkit-input-placeholder{color:green;}',
-      '.jsx-123::-moz-placeholder{color:green;}',
-      '.jsx-123:-ms-input-placeholder{color:green;}',
-      '.jsx-123::placeholder{color:green;}'
-    ],
-    '.jsx-123'
-  )
-}) */
+  snapshop(`div { color: red } ::placeholder { color: green }`, 'jsx-123')
+})
