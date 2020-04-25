@@ -1,8 +1,8 @@
 {
   "name": "@ciiri/styled-jsx",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "license": "MIT",
-  "repository": "singleparty/styled-jsx",
+  "repository": "https://github.com/singleparty/styled-jsx",
   "description": "Full CSS support for JSX without compromises",
   "files": [
     "dist",
@@ -98,6 +98,7 @@
     "babel-plugin-macros",
     "zeit",
     "css-in-js",
-    "css"
+    "css",
+    "ciiri"
   ]
 }
