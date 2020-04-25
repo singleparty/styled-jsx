@@ -5,7 +5,7 @@ const color = 'red'
 const zzz = css`
   div {
     font-size: 3em;
-    animation: scaleIn 3s ease-in forwards;
+    animation: fadeIn 3s ease-in forwards;
   }
   @keyframes fadeIn {
     0% {
