@@ -1,6 +1,26 @@
-import css, { resolve, global } from 'styled-jsx/css'
+import css, { resolve, global } from '@ciiri/styled-jsx/css'
 import colors, { size } from './constants'
 const color = 'red'
+
+const zzz = css`
+  div {
+    font-size: 3em;
+    animation: fadeIn 3s ease-in forwards;
+  }
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @media (min-width: 480px) {
+    div {
+      color: red;
+    }
+  }
+`
 
 const bar = css`
   div {
@@ -22,7 +42,11 @@ const a = global`
 
 export const uh = bar
 
-export const foo = css`div { color: ${color}}`
+export const foo = css`
+  div {
+    color: ${color};
+  }
+`
 
 css.resolve`
   div {

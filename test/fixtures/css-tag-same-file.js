@@ -1,4 +1,4 @@
-import css from 'styled-jsx/css'
+import css from '@ciiri/styled-jsx/css'
 
 export default ({ children }) => (
   <div>

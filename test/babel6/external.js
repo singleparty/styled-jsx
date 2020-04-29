@@ -80,7 +80,7 @@ test('use external stylesheets (global only)', async t => {
 
 test('injects JSXStyle for nested scope', async t => {
   const { code } = await transformSource(`
-    import css from 'styled-jsx/css'
+    import css from '@ciiri/styled-jsx/css'
 
     function test() {
       css.resolve\`div { color: red }\`

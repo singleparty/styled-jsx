@@ -21,6 +21,17 @@ test('transpiles external stylesheets', async t => {
   t.snapshot(code)
 })
 
+test('injects JSXStyle for nested scope', async t => {
+  const { code } = await transformSource(`
+    import css from '@ciiri/styled-jsx/css'
+
+    function test() {
+      css.resolve\`div { color: red }\`
+    }
+  `)
+  t.snapshot(code)
+})
+
 test('(optimized) transpiles external stylesheets', async t => {
   const { code } = await transform('./fixtures/styles.js', {
     optimizeForSpeed: true
@@ -47,20 +58,6 @@ test('does not transpile non-styled-jsx tagged teplate literals', async t => {
   t.snapshot(code)
 })
 
-test('throws when using `this.something` in external stylesheets', async t => {
-  const { message } = await t.throwsAsync(() =>
-    transform('./fixtures/styles-external-invalid.js')
-  )
-  t.regex(message, /this\.props/)
-})
-
-test('throws when referring an undefined value in external stylesheets', async t => {
-  const { message } = await t.throwsAsync(() =>
-    transform('./fixtures/styles-external-invalid2.js')
-  )
-  t.regex(message, /props\.color/)
-})
-
 test('use external stylesheets', async t => {
   const { code } = await transform('./fixtures/external-stylesheet.js')
   t.snapshot(code)
@@ -75,17 +72,6 @@ test('use external stylesheets (multi-line)', async t => {
 
 test('use external stylesheets (global only)', async t => {
   const { code } = await transform('./fixtures/external-stylesheet-global.js')
-  t.snapshot(code)
-})
-
-test('injects JSXStyle for nested scope', async t => {
-  const { code } = await transformSource(`
-    import css from 'styled-jsx/css'
-
-    function test() {
-      css.resolve\`div { color: red }\`
-    }
-  `)
   t.snapshot(code)
 })
 
@@ -112,4 +98,18 @@ test('Makes sure that style nodes are not re-used', async t => {
   )
 
   t.snapshot(code)
+})
+
+test('throws when using `this.something` in external stylesheets', async t => {
+  const { message } = await t.throwsAsync(() =>
+    transform('./fixtures/styles-external-invalid.js')
+  )
+  t.regex(message, /this\.props/)
+})
+
+test('throws when referring an undefined value in external stylesheets', async t => {
+  const { message } = await t.throwsAsync(() =>
+    transform('./fixtures/styles-external-invalid2.js')
+  )
+  t.regex(message, /props\.color/)
 })
