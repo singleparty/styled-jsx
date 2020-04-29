@@ -10,7 +10,8 @@ import {
   makeStyledJsxTag,
   getJSXStyleInfo,
   computeClassNames,
-  addClassName,
+  computeAttributes,
+  addAttribute,
   getScope,
   processCss,
   createReactComponentImportDeclaration,
@@ -50,7 +51,7 @@ export default function({ types: t }) {
           ))
       ) {
         if (state.className) {
-          addClassName(path, state.className)
+          addAttribute(path, state.attributes)
         }
       }
 
@@ -143,6 +144,7 @@ export default function({ types: t }) {
         }
 
         let externalJsxId
+        let externalJsxIdArr = []
         if (state.externalStyles.length > 0) {
           const expressions = state.externalStyles
             // Remove globals
@@ -166,6 +168,17 @@ export default function({ types: t }) {
               ],
               expressions
             )
+            externalJsxIdArr = externalJsxIdArr.concat(
+              expressions.map(expression => {
+                return t.templateLiteral(
+                  [
+                    t.templateElement({ raw: 'jsx-', cooked: 'jsx-' }, false),
+                    t.templateElement({ raw: '', cooked: '' }, true)
+                  ],
+                  [expression]
+                )
+              })
+            )
           }
         }
 
@@ -176,6 +189,11 @@ export default function({ types: t }) {
           )
           state.className = className
           state.staticClassName = staticClassName
+          const { attributes } = computeAttributes(
+            state.styles,
+            externalJsxIdArr
+          )
+          state.attributes = attributes
         }
 
         state.hasJSXStyle = true

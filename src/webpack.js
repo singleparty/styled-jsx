@@ -33,7 +33,7 @@ module.exports = function(content) {
     options.type = commentType[1]
   }
 
-  let output = `import css from 'styled-jsx/css';\n\nexport default css`
+  let output = `import css from '@ciiri/styled-jsx/css';\n\nexport default css`
 
   if (options.type === 'global') {
     // css.global``

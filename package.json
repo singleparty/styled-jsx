@@ -1,8 +1,8 @@
 {
-  "name": "styled-jsx",
-  "version": "3.2.5",
+  "name": "@ciiri/styled-jsx",
+  "version": "4.1.4",
   "license": "MIT",
-  "repository": "zeit/styled-jsx",
+  "repository": "https://github.com/singleparty/styled-jsx",
   "description": "Full CSS support for JSX without compromises",
   "files": [
     "dist",
@@ -58,8 +58,10 @@
   },
   "dependencies": {
     "@babel/types": "7.8.3",
+    "@vue/component-compiler-utils": "3.1.2",
     "babel-plugin-syntax-jsx": "6.18.0",
     "convert-source-map": "1.7.0",
+    "css": "2.2.4",
     "loader-utils": "1.2.3",
     "source-map": "0.7.3",
     "string-hash": "1.1.3",
@@ -96,6 +98,7 @@
     "babel-plugin-macros",
     "zeit",
     "css-in-js",
-    "css"
+    "css",
+    "ciiri"
   ]
 }

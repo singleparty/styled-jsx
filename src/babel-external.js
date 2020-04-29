@@ -129,13 +129,13 @@ function addHash(exportIdentifier, hash) {
 
 export const visitor = {
   ImportDeclaration(path, state) {
-    // import css from 'styled-jsx/css'
-    if (path.node.source.value !== 'styled-jsx/css') {
+    // import css from '@ciiri/styled-jsx/css'
+    if (path.node.source.value !== '@ciiri/styled-jsx/css') {
       return
     }
 
     // Find all the imported specifiers.
-    // e.g import css, { global, resolve } from 'styled-jsx/css'
+    // e.g import css, { global, resolve } from '@ciiri/styled-jsx/css'
     // -> ['css', 'global', 'resolve']
     const specifiersNames = path.node.specifiers.map(
       specifier => specifier.local.name
@@ -218,7 +218,7 @@ export const visitor = {
       )
 
       // When using the `resolve` helper we need to add an import
-      // for the _JSXStyle component `styled-jsx/style`
+      // for the _JSXStyle component `@ciiri/styled-jsx/style`
       if (
         hasJSXStyle &&
         taggedTemplateExpressions.resolve.length > 0 &&
