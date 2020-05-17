@@ -13,6 +13,16 @@ const transform = (file, opts = {}) =>
     ...opts
   })
 
+test('optional style, eg: { bool && <style jsx></style> }', async t => {
+  const { code } = await transform('./fixtures/optional-style.js')
+  t.snapshot(code)
+})
+
+test('多个dynamic style, this.state.xxxx', async t => {
+  const { code } = await transform('./fixtures/dynamic-multi-state.js')
+  t.snapshot(code)
+})
+
 test('handles dynamic `this` value inside of arrow function', async t => {
   const { code } = await transform(
     './fixtures/dynamic-this-value-in-arrow.js',

@@ -6,7 +6,7 @@ import { visitor as externalStylesVisitor } from './babel-external'
 import {
   isGlobalEl,
   isStyledJsx,
-  findStyles,
+  findStylesV2,
   makeStyledJsxTag,
   getJSXStyleInfo,
   computeClassNames,
@@ -64,7 +64,7 @@ export default function({ types: t }) {
           return
         }
 
-        const styles = findStyles(path)
+        const styles = findStylesV2(path)
 
         if (styles.length === 0) {
           return

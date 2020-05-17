@@ -147,6 +147,32 @@ export const findStyles = path => {
   return path.get('children').filter(isStyledJsx)
 }
 
+/**
+ * findStyles 升级
+ * 1、optional <style jsx />: 如果最后一个是<style jsx />，提出来。
+ *    eg: { bool && bool2 && <style jsx>{'.a {color: red;}'}</style> }
+ */
+export const findStylesV2 = path => {
+  if (isStyledJsx(path)) {
+    const { node } = path
+    return isGlobalEl(node.openingElement) ? [path] : []
+  }
+
+  return path
+    .get('children')
+    .map((p, i) => {
+      // optional <style jsx />
+      if (
+        t.isJSXExpressionContainer(p.node) &&
+        t.isLogicalExpression(p.node.expression)
+      ) {
+        return path.get('children')[i].get('expression.right')
+      }
+      return p
+    })
+    .filter(isStyledJsx)
+}
+
 // The following visitor ensures that MemberExpressions and Identifiers
 // are not in the scope of the current Method (render) or function (Component).
 export const validateExpressionVisitor = {
@@ -356,32 +382,35 @@ export const computeAttributes = (styles, externalJsxIdArr) => {
   }
 
   // _JSXStyle.dynamic([ ['1234', [props.foo, bar, fn(props)]], ... ])
-  const dynamic = t.callExpression(
-    // Callee: _JSXStyle.dynamic
-    t.memberExpression(t.identifier(STYLE_COMPONENT), t.identifier('dynamic')),
-    // Arguments
-    [
-      t.arrayExpression(
-        hashes.dynamic.map(styles =>
+  const dynamic = hashes.dynamic.map(styles =>
+    t.callExpression(
+      // Callee: _JSXStyle.dynamic
+      t.memberExpression(
+        t.identifier(STYLE_COMPONENT),
+        t.identifier('dynamic')
+      ),
+      // Arguments
+      [
+        t.arrayExpression([
           t.arrayExpression([
             t.stringLiteral(hashString(styles.hash + staticClassName)),
             t.arrayExpression(styles.expressions)
           ])
-        )
-      )
-    ]
+        ])
+      ]
+    )
   )
 
   // Dynamic and optionally external classes. E.g.
   // '[jsx-externalClasses] ' + _JSXStyle.dynamic([ ['1234', [props.foo, bar, fn(props)]], ... ])
   if (hashes.static.length === 0) {
-    attributes = [...externalJsxIdArr, dynamic]
+    attributes = [...externalJsxIdArr, ...dynamic]
     return { attributes }
   }
 
   // Static, dynamic and optionally external classes. E.g.
   // '[jsx-externalClasses] jsx-staticClasses ' + _JSXStyle.dynamic([ ['5678', [props.foo, bar, fn(props)]], ... ])
-  attributes = [...externalJsxIdArr, staticClassNameStringLiteral, dynamic]
+  attributes = [...externalJsxIdArr, staticClassNameStringLiteral, ...dynamic]
   return { attributes }
 }
 
