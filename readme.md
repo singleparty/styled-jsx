@@ -32,6 +32,17 @@
   }
   ```
 
+- *`2020.05.18`* 新增 `optional style tag` 用法
+  ```javascript
+  { this.state.optional && <style jsx>{`
+    .optional {
+      color: green;
+      font-size: ${this.state.fontSize};
+    }
+  `}</style> }
+  ```
+
+
 ### 已有项目如何接入
 
 > _目的是在不影响现有流程的情况下无缝接入_
