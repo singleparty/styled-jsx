@@ -1,6 +1,6 @@
 {
   "name": "@ciiri/styled-jsx",
-  "version": "4.2.1",
+  "version": "4.2.2",
   "license": "MIT",
   "repository": "https://github.com/singleparty/styled-jsx",
   "description": "Full CSS support for JSX without compromises",
