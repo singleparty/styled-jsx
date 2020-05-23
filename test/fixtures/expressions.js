@@ -84,5 +84,13 @@ export default ({ display }) => (
         content: '\`';
       }
     `}</style>
+    <style jsx>{`
+      .green:before {
+        content: '\\590d\\6d3b\\000d\\000a';
+      }
+      .green:after {
+        content: ${'"\\590d\\6d3b\\000d\\000a"'};
+      }
+    `}</style>
   </div>
 )

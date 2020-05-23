@@ -1,16 +1,16 @@
 # @ciiri/styled-jsx
 
-### fork 自 [`styled-jsx`](https://github.com/zeit/styled-jsx) ，目的在于修复某些 bug，`api` 可参考原来的库，其中改动点如下:
+### fork 自 [`styled-jsx`](https://github.com/zeit/styled-jsx) ，`api` 可参考原来的库。改动点如下:
 
-- `scopeId` 插入到属性而不是 `class`
+- `scopeId` 插入到属性而不是原本的 `class`
 
   ```javascript
   <div class="orange" jsx-302262132 jsx-175175684 />
   ```
 
-- 修改底层 css 编译库 `stylis` 为 `@vue/component-compiler-utils`，修复 bug [-webkit-keyframes add unexpect scope id](https://github.com/thysultan/stylis.js/issues/200)
+- 修改底层 css 编译库 `stylis` 为 `@vue/component-compiler-utils`，fix bug [-webkit-keyframes add unexpect scope id](https://github.com/thysultan/stylis.js/issues/200)
 
-- 修复 `import style from 'xxx.module.scss` 语法无法兼容 `css-loader` 问题（这个不算 bug，只是找到一个解决方案 [`extract-loader`](https://github.com/peerigon/extract-loader)）
+- 解决 `import style from 'xxx.module.scss` 语法无法兼容 `css-loader` 问题（方案：[`extract-loader`](https://github.com/peerigon/extract-loader)）
 
 - `css` 语法与vue保持一致(因为换了编译库)，如果用scss的话，简单使用如下：
   ```css
@@ -32,7 +32,7 @@
   }
   ```
 
-- *`2020.05.18`* 新增 `optional style tag` 用法
+- **`version 4.2.2`** 新增 `optional style tag` 用法
   ```javascript
   { this.state.optional && <style jsx>{`
     .optional {
@@ -41,6 +41,8 @@
     }
   `}</style> }
   ```
+
+- 以后`README`只同步新特性，bug相关修复同步在`CHANGELOG`
 
 
 ### 已有项目如何接入

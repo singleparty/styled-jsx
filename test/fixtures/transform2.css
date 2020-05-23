@@ -1,0 +1,9 @@
+.green:after {
+  content: "\590d\6d3b\000d\000a";
+}
+.green:before {
+  content: "`";
+}
+.App::v-deep .orange {
+  animation: scaleIn 3s ease-in forwards; 
+}
